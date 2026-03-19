@@ -7,18 +7,18 @@ import type { WalletState } from "../types";
 type Page = "dex" | "faucet" | "admin";
 
 interface Props {
-    page: Page;
-    onNav: (p: Page) => void;
-    midPrice: number;
-    priceUp: boolean;
-    wallet: WalletState | null;
-    onWalletClick: () => void;
+  page: Page;
+  onNav: (p: Page) => void;
+  midPrice: number;
+  priceUp: boolean;
+  wallet: WalletState | null;
+  onWalletClick: () => void;
 }
 
 const NAV: { id: Page; label: string }[] = [
-    { id: "dex", label: "Trade" },
-    { id: "faucet", label: "Faucet" },
-    { id: "admin", label: "Admin" }
+  { id: "dex", label: "Trade" },
+  { id: "faucet", label: "Faucet" },
+  { id: "admin", label: "Admin" },
 ];
 
 const css = `
@@ -176,85 +176,79 @@ const css = `
 `;
 
 export function Topbar({
-    page,
-    onNav,
-    midPrice,
-    priceUp,
-    wallet,
-    onWalletClick
+  page,
+  onNav,
+  midPrice,
+  priceUp,
+  wallet,
+  onWalletClick,
 }: Props) {
-    // Long form:  "0.0.9999999"
-    // Short form: "9999999" (just the number, fits small screens)
-    const shortId = wallet?.accountId.split(".").pop() ?? "";
-    const fullId = wallet ? wallet.accountId.slice(0, 13) + "…" : "";
+  // Long form:  "0.0.9999999"
+  // Short form: "9999999" (just the number, fits small screens)
+  const shortId = wallet?.accountId.split(".").pop() ?? "";
+  const fullId = wallet ? wallet.accountId.slice(0, 13) + "…" : "";
 
-    return (
-        <>
-            <style>{css}</style>
-            <header className="tb">
-                {/* Logo */}
-                <div className="tb-logo">
-                    <div className="tb-logo-dot" />
-                    OrderbookDex
-                </div>
+  return (
+    <>
+      <style>{css}</style>
+      <header className="tb">
+        {/* Logo */}
+        <div className="tb-logo">
+          <div className="tb-logo-dot" />
+          OrderbookDex
+        </div>
 
-                {/* Nav tabs */}
-                <nav className="tb-nav">
-                    {NAV.map(n => (
-                        <button
-                            key={n.id}
-                            className={`tb-nav-btn ${page === n.id ? "active" : ""}`}
-                            onClick={() => onNav(n.id)}
-                        >
-                            {n.label}
-                        </button>
-                    ))}
-                </nav>
+        {/* Nav tabs */}
+        <nav className="tb-nav">
+          {NAV.map((n) => (
+            <button
+              key={n.id}
+              className={`tb-nav-btn ${page === n.id ? "active" : ""}`}
+              onClick={() => onNav(n.id)}
+            >
+              {n.label}
+            </button>
+          ))}
+        </nav>
 
-                {/* Right side */}
-                <div className="tb-right">
-                    {/* Price ticker (tablet+) */}
-                    <div className="tb-ticker">
-                        <span className="tb-ticker-pair">TOKA/HBAR</span>
-                        <span
-                            className={`tb-ticker-price ${priceUp ? "up" : "down"}`}
-                        >
-                            {midPrice.toFixed(4)}
-                        </span>
-                        <span className="tb-ticker-change">
-                            {priceUp ? "▲" : "▼"} 0.12%
-                        </span>
-                    </div>
+        {/* Right side */}
+        <div className="tb-right">
+          {/* Price ticker (tablet+) */}
+          <div className="tb-ticker">
+            <span className="tb-ticker-pair">TOKA/HBAR</span>
+            <span className={`tb-ticker-price ${priceUp ? "up" : "down"}`}>
+              {midPrice.toFixed(4)}
+            </span>
+            <span className="tb-ticker-change">
+              {priceUp ? "▲" : "▼"} 0.12%
+            </span>
+          </div>
 
-                    {/* Network badge (desktop+) */}
-                    <div className="tb-net">
-                        <div className="tb-net-dot" />
-                        <span>Testnet</span>
-                    </div>
+          {/* Network badge (desktop+) */}
+          <div className="tb-net">
+            <div className="tb-net-dot" />
+            <span>Testnet</span>
+          </div>
 
-                    {/* Wallet button */}
-                    <button
-                        className={`tb-wallet ${wallet ? "on" : "off"}`}
-                        onClick={onWalletClick}
-                    >
-                        {wallet ? (
-                            <>
-                                <span className="tb-wallet-short">
-                                    {shortId}
-                                </span>
-                                <span className="tb-wallet-full">{fullId}</span>
-                            </>
-                        ) : (
-                            <>
-                                <span className="tb-wallet-short">Connect</span>
-                                <span className="tb-wallet-full">
-                                    Connect Wallet
-                                </span>
-                            </>
-                        )}
-                    </button>
-                </div>
-            </header>
-        </>
-    );
+          {/* Wallet button */}
+          <button
+            className={`tb-wallet ${wallet ? "on" : "off"}`}
+            onClick={onWalletClick}
+          >
+            {wallet ? (
+              <>
+                <span className="tb-wallet-short">{shortId}</span>
+                <span className="tb-wallet-full">{fullId}</span>
+              </>
+            ) : (
+              <>
+                <span className="tb-wallet-short">Connect</span>
+                <span className="tb-wallet-full">Connect Wallet</span>
+              </>
+            )}
+          </button>
+        </div>
+      </header>
+    </>
+  );
 }
