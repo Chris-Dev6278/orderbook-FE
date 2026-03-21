@@ -6,6 +6,7 @@ import {
   disconnectAll,
   getExistingAccountId,
 } from "../services/walletConnect";
+import { clearJWT, isJWTExpired } from "../services/api";
 
 function makeBalances() {
   return [
@@ -14,7 +15,6 @@ function makeBalances() {
     { symbol: "TOKB", tokenId: "0.0.4100002", amount: 0 },
   ];
 }
-
 function demoBalances() {
   return [
     { symbol: "HBAR", tokenId: null, amount: 1000 },
@@ -27,6 +27,7 @@ export function useWallet() {
   const [wallet, setWallet] = useState<WalletState | null>(null);
   const [connecting, setConnecting] = useState(false);
 
+<<<<<<< HEAD
   // ── Restore existing WalletConnect session on load ────────
   useEffect(() => {
     getExistingAccountId().then((accountId) => {
@@ -36,11 +37,30 @@ export function useWallet() {
           walletType: "hashconnect",
           connected: true,
           balances: makeBalances(),
+=======
+    // ── Restore session on load ───────────────────────────────
+    useEffect(() => {
+        // If JWT is expired, don't restore — force re-auth
+        if (isJWTExpired()) {
+            clearJWT();
+            return;
+        }
+        getExistingAccountId().then(accountId => {
+            if (accountId) {
+                setWallet({
+                    accountId,
+                    walletType: "hashconnect",
+                    connected: true,
+                    balances: makeBalances()
+                });
+            }
+>>>>>>> 020d664 (Nonce refresh)
         });
       }
     });
   }, []);
 
+<<<<<<< HEAD
   // ── Connect ───────────────────────────────────────────────
   const connect = useCallback(async (type: WalletType) => {
     setConnecting(true);
@@ -58,6 +78,84 @@ export function useWallet() {
           type: "success",
           title: "Demo Wallet Connected",
           msg: "0.0.9999999 on Hedera Testnet",
+=======
+    // ── JWT expiry watcher ────────────────────────────────────
+    // Checks every 60s — if JWT expires mid-session, auto disconnect
+    useEffect(() => {
+        if (!wallet || wallet.walletType === "demo") return;
+        const id = setInterval(() => {
+            if (isJWTExpired()) {
+                clearJWT();
+                setWallet(null);
+                addToast({
+                    type: "error",
+                    title: "Session Expired",
+                    msg: "Your session expired. Please reconnect your wallet."
+                });
+            }
+        }, 60_000);
+        return () => clearInterval(id);
+    }, [wallet]);
+
+    // ── Connect ───────────────────────────────────────────────
+    const connect = useCallback(async (type: WalletType) => {
+        setConnecting(true);
+        try {
+            if (type === "demo") {
+                await new Promise(r => setTimeout(r, 500));
+                setWallet({
+                    accountId: "0.0.9999999",
+                    walletType: "demo",
+                    connected: true,
+                    balances: demoBalances()
+                });
+                addToast({
+                    type: "success",
+                    title: "Demo Wallet Connected",
+                    msg: "0.0.9999999 — demo mode, no real transactions"
+                });
+                return;
+            }
+
+            // Real wallet: connect → get nonce → sign → verify → JWT
+            const accountId = await connectWalletConnect();
+            setWallet({
+                accountId,
+                walletType: type,
+                connected: true,
+                balances: makeBalances()
+            });
+            addToast({
+                type: "success",
+                title: "Wallet Verified ✓",
+                msg: `${accountId} authenticated on Hedera Testnet`
+            });
+        } catch (e) {
+            const msg = (e as Error).message ?? "";
+            if (msg === "JWT_EXPIRED") {
+                addToast({
+                    type: "error",
+                    title: "Session Expired",
+                    msg: "Please reconnect."
+                });
+            } else if (!msg.includes("closed") && !msg.includes("rejected")) {
+                addToast({ type: "error", title: "Connection Failed", msg });
+            }
+        } finally {
+            setConnecting(false);
+        }
+    }, []);
+
+    // ── Disconnect ────────────────────────────────────────────
+    const disconnect = useCallback(async () => {
+        await disconnectAll();
+        clearJWT();
+        setWallet(null);
+        addToast({
+            type: "info",
+            title: "Disconnected",
+            msg: "Wallet disconnected and session cleared."
+>>>>>>> 020d664 (Nonce refresh)
         });
         return;
       }
@@ -86,6 +184,7 @@ export function useWallet() {
     }
   }, []);
 
+<<<<<<< HEAD
   // ── Disconnect ────────────────────────────────────────────
   const disconnect = useCallback(async () => {
     await disconnectAll();
@@ -96,6 +195,14 @@ export function useWallet() {
       msg: "Wallet disconnected.",
     });
   }, []);
+=======
+    // ── Get balance by symbol ─────────────────────────────────
+    const getBalance = useCallback(
+        (symbol: string): number =>
+            wallet?.balances.find(b => b.symbol === symbol)?.amount ?? 0,
+        [wallet]
+    );
+>>>>>>> 020d664 (Nonce refresh)
 
   // ── Optimistic balance update ─────────────────────────────
   const updateBalance = useCallback((symbol: string, delta: number) => {

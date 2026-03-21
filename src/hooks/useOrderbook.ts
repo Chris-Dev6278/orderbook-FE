@@ -1,13 +1,8 @@
-// Generates a live-updating mock orderbook.
-// When your backend is ready, replace generateMock()
-// with a real fetch() call to GET /orderbook?pair=TOKA-HBAR
-
 import { useState, useEffect, useRef } from "react";
 import type { Orderbook } from "../types";
 
 const BASE_PRICE = 0.2845;
 
-// asks or bid
 function buildSide(mid: number, direction: "ask" | "bid", levels = 12) {
     return Array.from({ length: levels }, (_, i) => {
         const spread =
@@ -15,12 +10,11 @@ function buildSide(mid: number, direction: "ask" | "bid", levels = 12) {
         const price = +(mid * spread).toFixed(4);
         const amount = +(Math.random() * 1400 + 100).toFixed(2);
         const total = +(price * amount).toFixed(2);
-        const depth = Math.random();
         return {
             price,
             amount,
             total,
-            depth,
+            depth: Math.random(),
             orderCount: Math.ceil(Math.random() * 5)
         };
     }).sort((a, b) =>
@@ -28,7 +22,7 @@ function buildSide(mid: number, direction: "ask" | "bid", levels = 12) {
     );
 }
 
-function generateMock(mid: number) {
+function generateMock(mid: number): Orderbook {
     const asks = buildSide(mid, "ask");
     const bids = buildSide(mid, "bid");
     return {
@@ -52,7 +46,6 @@ export function useOrderbook() {
         const id = setInterval(() => {
             const delta = (Math.random() - 0.48) * 0.0004;
             const next = +(prevPrice.current + delta).toFixed(4);
-
             setPriceUp(next >= prevPrice.current);
             prevPrice.current = next;
             setMidPrice(next);

@@ -7,12 +7,22 @@ import type { WalletState } from "../types";
 type Page = "dex" | "faucet" | "admin";
 
 interface Props {
+<<<<<<< HEAD
   page: Page;
   onNav: (p: Page) => void;
   midPrice: number;
   priceUp: boolean;
   wallet: WalletState | null;
   onWalletClick: () => void;
+=======
+    page: Page;
+    onNav: (p: Page) => void;
+    midPrice: number;
+    priceUp: boolean;
+    wallet: WalletState | null;
+    onWalletClick: () => void;
+    onDisconnect: () => void;
+>>>>>>> 020d664 (Nonce refresh)
 }
 
 const NAV: { id: Page; label: string }[] = [
@@ -163,6 +173,26 @@ const css = `
     color: var(--green);
     background: var(--green-dim);
   }
+  
+  .tb-disconnect {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius);
+  border: 1px solid var(--red-dim);
+  background: transparent;
+  color: var(--red);
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.tb-disconnect:hover {
+  background: var(--red-dim);
+}
 
   /* On mobile: show only a short account ID */
   .tb-wallet-full  { display: none; }
@@ -176,12 +206,22 @@ const css = `
 `;
 
 export function Topbar({
+<<<<<<< HEAD
   page,
   onNav,
   midPrice,
   priceUp,
   wallet,
   onWalletClick,
+=======
+    page,
+    onNav,
+    midPrice,
+    priceUp,
+    wallet,
+    onWalletClick,
+    onDisconnect
+>>>>>>> 020d664 (Nonce refresh)
 }: Props) {
   // Long form:  "0.0.9999999"
   // Short form: "9999999" (just the number, fits small screens)
@@ -224,6 +264,7 @@ export function Topbar({
             </span>
           </div>
 
+<<<<<<< HEAD
           {/* Network badge (desktop+) */}
           <div className="tb-net">
             <div className="tb-net-dot" />
@@ -251,4 +292,47 @@ export function Topbar({
       </header>
     </>
   );
+=======
+                    {/* Network badge (desktop+) */}
+                    <div className="tb-net">
+                        <div className="tb-net-dot" />
+                        <span>Testnet</span>
+                    </div>
+                    {/* Wallet button */}
+                    <button
+                        className={`tb-wallet ${wallet ? "on" : "off"}`}
+                        onClick={onWalletClick}
+                    >
+                        {wallet ? (
+                            <>
+                                <span className="tb-wallet-short">
+                                    {shortId}
+                                </span>
+                                <span className="tb-wallet-full">{fullId}</span>
+                            </>
+                        ) : (
+                            <>
+                                <span className="tb-wallet-short">Connect</span>
+                                <span className="tb-wallet-full">
+                                    Connect Wallet
+                                </span>
+                            </>
+                        )}
+                    </button>
+
+                    {/* Disconnect button — only shown when connected */}
+                    {wallet && (
+                        <button
+                            className="tb-disconnect"
+                            onClick={onDisconnect}
+                            title="Disconnect wallet"
+                        >
+                            ✕
+                        </button>
+                    )}
+                </div>
+            </header>
+        </>
+    );
+>>>>>>> 020d664 (Nonce refresh)
 }

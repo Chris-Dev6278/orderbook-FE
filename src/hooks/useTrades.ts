@@ -1,7 +1,3 @@
-// Generates live mock trades and HCS messages.
-// Replace the mock generators with real fetch() calls
-// once your backend is ready.
-
 import { useState, useEffect } from "react";
 import type { Trade, HCSMessage } from "../types";
 
@@ -32,7 +28,6 @@ function mockHCSMessage(seqNo: number, mid: number): HCSMessage {
         "SETTLEMENT_ATOMIC"
     ];
     const type = types[Math.floor(Math.random() * types.length)];
-
     const data =
         type === "ORDER_PLACED"
             ? {
@@ -51,7 +46,6 @@ function mockHCSMessage(seqNo: number, mid: number): HCSMessage {
                     txId: `${HCS_TOPIC}@${Math.floor(Date.now() / 1000)}`,
                     status: "SUCCESS"
                 };
-
     return {
         id: genId(),
         seqNo,
@@ -62,7 +56,6 @@ function mockHCSMessage(seqNo: number, mid: number): HCSMessage {
     };
 }
 
-// Seed initial data so the UI isn't empty on first load
 function seedTrades(count = 20): Trade[] {
     return Array.from({ length: count }, (_, i) => ({
         id: genId(),
@@ -86,7 +79,6 @@ export function useTrades(midPrice: number) {
     const [trades, setTrades] = useState<Trade[]>(seedTrades);
     const [hcsMessages, setHcsMessages] = useState<HCSMessage[]>(seedHCS);
 
-    // Add a new trade every ~3s
     useEffect(() => {
         const id = setInterval(() => {
             setTrades(prev => [mockTrade(midPrice), ...prev].slice(0, 30));
@@ -94,7 +86,6 @@ export function useTrades(midPrice: number) {
         return () => clearInterval(id);
     }, [midPrice]);
 
-    // Add a new HCS message every ~5s
     useEffect(() => {
         const id = setInterval(() => {
             setHcsMessages(prev => {
@@ -105,7 +96,6 @@ export function useTrades(midPrice: number) {
         return () => clearInterval(id);
     }, [midPrice]);
 
-    // Called from App when an order is placed — adds to both lists
     function pushOrder(order: {
         side: string;
         price: number;

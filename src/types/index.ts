@@ -51,6 +51,7 @@ export interface Orderbook {
 
 // ─── TRADES ──────────────────────────────────────────────
 export interface Trade {
+<<<<<<< HEAD
   id: string;
   price: number;
   amount: number;
@@ -59,6 +60,16 @@ export interface Trade {
   sellerAccountId: string;
   hcsTxId: string;
   executedAt: Date;
+=======
+    id: string;
+    price: number;
+    amount: number;
+    side: OrderSide;
+    buyerAccountId: string;
+    sellerAccountId: string;
+    hcsTxId: string;
+    executedAt: Date;
+>>>>>>> 020d664 (Nonce refresh)
 }
 
 // ─── HCS MESSAGES ──────────────────────────────────────────────

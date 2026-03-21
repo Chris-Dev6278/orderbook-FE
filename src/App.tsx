@@ -14,6 +14,8 @@ import { useToasts, addToast } from "./hooks/useToast";
 import type { OrderPayload } from "./components/OrderForm";
 import { FaucetPage } from "./components/FaucetPage";
 import { AdminPage } from "./components/AdminPage";
+import { placeOrder } from "./services/api";
+import { mintTokens } from "./services/api";
 
 // ── Toast container ───────────────────────────────────────
 function ToastContainer() {
@@ -167,9 +169,16 @@ export default function App() {
   const [pendingOrder, setPending] = useState<OrderPayload | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+<<<<<<< HEAD
   const { wallet, connect, updateBalance, getBalance } = useWallet();
   const { orderbook, midPrice, priceUp } = useOrderbook();
   const { trades, hcsMessages, pushOrder } = useTrades(midPrice);
+=======
+    const { wallet, connect, disconnect, updateBalance, getBalance } =
+        useWallet();
+    const { orderbook, midPrice, priceUp } = useOrderbook();
+    const { trades, hcsMessages, pushOrder } = useTrades(midPrice);
+>>>>>>> 020d664 (Nonce refresh)
 
   // ── Order confirm flow ──────────────────────────────────
   async function handleConfirm() {
@@ -179,7 +188,21 @@ export default function App() {
     // Simulate network delay (replace with real API call in Step 12)
     await new Promise((r) => setTimeout(r, 700));
 
+<<<<<<< HEAD
     const seqNo = hcsMessages[0].seqNo + 1;
+=======
+        const result = await placeOrder({
+            side: pendingOrder.side,
+            type: pendingOrder.type,
+            price: pendingOrder.price,
+            amount: pendingOrder.amount,
+            accountId: wallet.accountId
+        });
+
+        const seqNo =
+            (result as { hcsSeqNo?: number })?.hcsSeqNo ??
+            hcsMessages[0].seqNo + 1;
+>>>>>>> 020d664 (Nonce refresh)
 
     // Optimistic balance update
     if (pendingOrder.side === "buy") {
@@ -249,7 +272,150 @@ export default function App() {
                 overflow: "hidden",
               }}
             >
+<<<<<<< HEAD
               <Orderbook orderbook={orderbook} loading={false} />
+=======
+                <Topbar
+                    page={page}
+                    onNav={setPage}
+                    midPrice={midPrice}
+                    priceUp={priceUp}
+                    wallet={wallet}
+                    onWalletClick={() => setShowWallet(true)}
+                    onDisconnect={disconnect}
+                />
+
+                {/* ── DEX PAGE ── */}
+                {page === "dex" && (
+                    <div
+                        style={{ display: "flex", flex: 1, overflow: "hidden" }}
+                    >
+                        {/* Left — Orderbook */}
+                        <div
+                            style={{
+                                width: 240,
+                                flexShrink: 0,
+                                borderRight: "1px solid var(--border)",
+                                display: "flex",
+                                flexDirection: "column",
+                                overflow: "hidden"
+                            }}
+                        >
+                            <Orderbook orderbook={orderbook} loading={false} />
+                        </div>
+
+                        {/* Center — Balance bar + trades + HCS log */}
+                        <div
+                            style={{
+                                flex: 1,
+                                display: "flex",
+                                flexDirection: "column",
+                                overflow: "hidden"
+                            }}
+                        >
+                            {wallet && <BalanceBar getBalance={getBalance} />}
+                            <div
+                                style={{
+                                    flex: 1,
+                                    display: "flex",
+                                    overflow: "hidden"
+                                }}
+                            >
+                                {/* Trades */}
+                                <div
+                                    style={{
+                                        flex: 1,
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        overflow: "hidden",
+                                        borderRight: "1px solid var(--border)"
+                                    }}
+                                >
+                                    <TradeList trades={trades} />
+                                </div>
+
+                                {/* HCS log */}
+                                <div
+                                    style={{
+                                        flex: 1,
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        overflow: "hidden"
+                                    }}
+                                >
+                                    <HCSLog messages={hcsMessages} />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Right — Order form */}
+                        <div
+                            style={{
+                                width: 280,
+                                flexShrink: 0,
+                                borderLeft: "1px solid var(--border)",
+                                display: "flex",
+                                flexDirection: "column",
+                                background: "var(--bg1)"
+                            }}
+                        >
+                            <div
+                                style={{
+                                    padding: "10px 14px",
+                                    borderBottom: "1px solid var(--border)",
+                                    fontFamily: "var(--font-display)",
+                                    fontSize: 11,
+                                    fontWeight: 700,
+                                    color: "var(--text-mid)",
+                                    letterSpacing: 1,
+                                    textTransform: "uppercase" as const
+                                }}
+                            >
+                                Place Order
+                            </div>
+                            <OrderForm
+                                wallet={wallet}
+                                midPrice={midPrice}
+                                getBalance={getBalance}
+                                onSubmit={setPending}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {/* ── FAUCET PAGE ── */}
+                {page === "faucet" && (
+                    <FaucetPage
+                        wallet={wallet}
+                        getBalance={getBalance}
+                        onMint={async (symbol, amount) => {
+                            // Simulate mint delay (replace with real API call later)
+                            //await new Promise(r => setTimeout(r, 800));
+                            const result = await mintTokens(
+                                wallet!.accountId,
+                                symbol,
+                                amount
+                            );
+                            if (!result) throw new Error("Mint failed");
+                            updateBalance(symbol, amount);
+                            addToast({
+                                type: "success",
+                                title: "Tokens Minted",
+                                msg: `+${amount} ${symbol} added to ${wallet?.accountId}`
+                            });
+                        }}
+                    />
+                )}
+                {/* ── ADMIN PAGE ── */}
+                {page === "admin" && (
+                    <AdminPage
+                        trades={trades}
+                        hcsMessages={hcsMessages}
+                        wallet={wallet}
+                        getBalance={getBalance}
+                    />
+                )}
+>>>>>>> 020d664 (Nonce refresh)
             </div>
 
             {/* Center — Balance bar + trades + HCS log */}

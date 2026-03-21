@@ -19,7 +19,7 @@ export default defineConfig({
         port: 5173
     },
     optimizeDeps: {
-        exclude: ["@hashgraph/sdk", "@hashgraph/hedera-wallet-connect"]
+        exclude: ["@hashgraph/sdk"]
     },
     build: {
         outDir: "dist",
