@@ -7,14 +7,6 @@ import type { WalletState } from "../types";
 type Page = "dex" | "faucet" | "admin";
 
 interface Props {
-<<<<<<< HEAD
-  page: Page;
-  onNav: (p: Page) => void;
-  midPrice: number;
-  priceUp: boolean;
-  wallet: WalletState | null;
-  onWalletClick: () => void;
-=======
     page: Page;
     onNav: (p: Page) => void;
     midPrice: number;
@@ -22,13 +14,12 @@ interface Props {
     wallet: WalletState | null;
     onWalletClick: () => void;
     onDisconnect: () => void;
->>>>>>> 020d664 (Nonce refresh)
 }
 
 const NAV: { id: Page; label: string }[] = [
-  { id: "dex", label: "Trade" },
-  { id: "faucet", label: "Faucet" },
-  { id: "admin", label: "Admin" },
+    { id: "dex", label: "Trade" },
+    { id: "faucet", label: "Faucet" },
+    { id: "admin", label: "Admin" }
 ];
 
 const css = `
@@ -44,7 +35,6 @@ const css = `
     gap: 8px;
   }
 
-  /* ── Logo ── */
   .tb-logo {
     display: flex;
     align-items: center;
@@ -67,11 +57,10 @@ const css = `
     flex-shrink: 0;
   }
 
-  /* ── Nav ── */
   .tb-nav {
     display: flex;
     gap: 2px;
-    flex: 1;                /* pushes right side to the edge */
+    flex: 1;
     overflow: hidden;
   }
   .tb-nav-btn {
@@ -92,7 +81,6 @@ const css = `
   .tb-nav-btn:hover  { color: var(--text); background: var(--bg3); }
   .tb-nav-btn.active { color: var(--cyan); background: var(--cyan-dim); }
 
-  /* ── Right group ── */
   .tb-right {
     display: flex;
     align-items: center;
@@ -100,9 +88,8 @@ const css = `
     flex-shrink: 0;
   }
 
-  /* ── Price ticker — hidden on mobile ── */
   .tb-ticker {
-    display: none;          /* hidden by default (mobile) */
+    display: none;
     align-items: center;
     gap: 7px;
     padding: 5px 10px;
@@ -115,17 +102,15 @@ const css = `
   .tb-ticker-pair  { font-weight: 700; color: var(--text); }
   .tb-ticker-price { font-weight: 700; transition: color 0.3s; }
   .tb-ticker-price.up   { color: var(--green); }
-  .tb-ticker-price.down { color: var(--red); }
+  .tb-ticker-price.down { color: var(--red);   }
   .tb-ticker-change { font-size: 10px; color: var(--text-dim); }
 
-  /* Show ticker on tablet+ */
   @media (min-width: 600px) {
     .tb-ticker { display: flex; }
   }
 
-  /* ── Network badge — hidden on mobile + tablet ── */
   .tb-net {
-    display: none;          /* hidden on mobile */
+    display: none;
     align-items: center;
     gap: 5px;
     font-size: 10px;
@@ -141,12 +126,10 @@ const css = `
     flex-shrink: 0;
   }
 
-  /* Show network badge on desktop */
   @media (min-width: 900px) {
     .tb-net { display: flex; }
   }
 
-  /* ── Wallet button ── */
   .tb-wallet {
     padding: 7px 12px;
     border-radius: var(--radius);
@@ -159,7 +142,6 @@ const css = `
     transition: all 0.15s;
     white-space: nowrap;
     -webkit-tap-highlight-color: transparent;
-    /* Slightly wider tap target on mobile */
     min-height: 36px;
   }
   .tb-wallet.off {
@@ -173,28 +155,25 @@ const css = `
     color: var(--green);
     background: var(--green-dim);
   }
-  
-  .tb-disconnect {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius);
-  border: 1px solid var(--red-dim);
-  background: transparent;
-  color: var(--red);
-  font-size: 11px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.tb-disconnect:hover {
-  background: var(--red-dim);
-}
 
-  /* On mobile: show only a short account ID */
+  .tb-disconnect {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius);
+    border: 1px solid var(--red-dim);
+    background: transparent;
+    color: var(--red);
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tb-disconnect:hover { background: var(--red-dim); }
+
   .tb-wallet-full  { display: none; }
   .tb-wallet-short { display: inline; }
 
@@ -206,14 +185,6 @@ const css = `
 `;
 
 export function Topbar({
-<<<<<<< HEAD
-  page,
-  onNav,
-  midPrice,
-  priceUp,
-  wallet,
-  onWalletClick,
-=======
     page,
     onNav,
     midPrice,
@@ -221,84 +192,49 @@ export function Topbar({
     wallet,
     onWalletClick,
     onDisconnect
->>>>>>> 020d664 (Nonce refresh)
 }: Props) {
-  // Long form:  "0.0.9999999"
-  // Short form: "9999999" (just the number, fits small screens)
-  const shortId = wallet?.accountId.split(".").pop() ?? "";
-  const fullId = wallet ? wallet.accountId.slice(0, 13) + "…" : "";
+    const shortId = wallet?.accountId.split(".").pop() ?? "";
+    const fullId = wallet ? wallet.accountId.slice(0, 13) + "…" : "";
 
-  return (
-    <>
-      <style>{css}</style>
-      <header className="tb">
-        {/* Logo */}
-        <div className="tb-logo">
-          <div className="tb-logo-dot" />
-          OrderbookDex
-        </div>
+    return (
+        <>
+            <style>{css}</style>
+            <header className="tb">
+                <div className="tb-logo">
+                    <div className="tb-logo-dot" />
+                    OrderbookDex
+                </div>
 
-        {/* Nav tabs */}
-        <nav className="tb-nav">
-          {NAV.map((n) => (
-            <button
-              key={n.id}
-              className={`tb-nav-btn ${page === n.id ? "active" : ""}`}
-              onClick={() => onNav(n.id)}
-            >
-              {n.label}
-            </button>
-          ))}
-        </nav>
+                <nav className="tb-nav">
+                    {NAV.map(n => (
+                        <button
+                            key={n.id}
+                            className={`tb-nav-btn ${page === n.id ? "active" : ""}`}
+                            onClick={() => onNav(n.id)}
+                        >
+                            {n.label}
+                        </button>
+                    ))}
+                </nav>
 
-        {/* Right side */}
-        <div className="tb-right">
-          {/* Price ticker (tablet+) */}
-          <div className="tb-ticker">
-            <span className="tb-ticker-pair">TOKA/HBAR</span>
-            <span className={`tb-ticker-price ${priceUp ? "up" : "down"}`}>
-              {midPrice.toFixed(4)}
-            </span>
-            <span className="tb-ticker-change">
-              {priceUp ? "▲" : "▼"} 0.12%
-            </span>
-          </div>
+                <div className="tb-right">
+                    <div className="tb-ticker">
+                        <span className="tb-ticker-pair">TOKA/HBAR</span>
+                        <span
+                            className={`tb-ticker-price ${priceUp ? "up" : "down"}`}
+                        >
+                            {midPrice.toFixed(4)}
+                        </span>
+                        <span className="tb-ticker-change">
+                            {priceUp ? "▲" : "▼"} 0.12%
+                        </span>
+                    </div>
 
-<<<<<<< HEAD
-          {/* Network badge (desktop+) */}
-          <div className="tb-net">
-            <div className="tb-net-dot" />
-            <span>Testnet</span>
-          </div>
-
-          {/* Wallet button */}
-          <button
-            className={`tb-wallet ${wallet ? "on" : "off"}`}
-            onClick={onWalletClick}
-          >
-            {wallet ? (
-              <>
-                <span className="tb-wallet-short">{shortId}</span>
-                <span className="tb-wallet-full">{fullId}</span>
-              </>
-            ) : (
-              <>
-                <span className="tb-wallet-short">Connect</span>
-                <span className="tb-wallet-full">Connect Wallet</span>
-              </>
-            )}
-          </button>
-        </div>
-      </header>
-    </>
-  );
-=======
-                    {/* Network badge (desktop+) */}
                     <div className="tb-net">
                         <div className="tb-net-dot" />
                         <span>Testnet</span>
                     </div>
-                    {/* Wallet button */}
+
                     <button
                         className={`tb-wallet ${wallet ? "on" : "off"}`}
                         onClick={onWalletClick}
@@ -320,7 +256,6 @@ export function Topbar({
                         )}
                     </button>
 
-                    {/* Disconnect button — only shown when connected */}
                     {wallet && (
                         <button
                             className="tb-disconnect"
@@ -334,5 +269,4 @@ export function Topbar({
             </header>
         </>
     );
->>>>>>> 020d664 (Nonce refresh)
 }
